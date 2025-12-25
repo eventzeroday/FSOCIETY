@@ -60,8 +60,28 @@ const Dashboard = () => {
       return;
     }
 
-    const savedHistory = localStorage.getItem("diagnosisHistory");
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
+    // Fetch History from PHP Database
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      fetch(`http://localhost/php_backend/get_history.php?user_id=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            setHistory(data.history.map((item: any) => ({
+              id: item.id,
+              date: item.date,
+              disease: item.disease,
+              severity: item.risk ? item.risk.toLowerCase() : "low",
+              confidence: item.confidence
+            })));
+          }
+        })
+        .catch(err => console.error("History fetch error:", err));
+    } else {
+      // Fallback to localStorage if no user ID (legacy support)
+      const savedHistory = localStorage.getItem("diagnosisHistory");
+      if (savedHistory) setHistory(JSON.parse(savedHistory));
+    }
 
     const savedLocation = localStorage.getItem("userLocation");
     if (savedLocation) {

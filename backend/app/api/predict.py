@@ -11,6 +11,7 @@ class PredictRequest(BaseModel):
     symptoms: str
     latitude: float
     longitude: float
+    soil_pH: float = 6.5  # Default value if not provided
 
 @router.post("/predict")
 def predict(data: PredictRequest):
@@ -20,7 +21,8 @@ def predict(data: PredictRequest):
     disease_result = predict_disease(
         data.crop,
         data.symptoms,
-        weather
+        weather,
+        data.soil_pH
     )
 
     return {

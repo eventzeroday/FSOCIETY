@@ -8,12 +8,13 @@ import { toast } from "@/hooks/use-toast";
 import { Leaf, Shield, User, Lock } from "lucide-react";
 
 const Login = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!username || !password) {
@@ -27,17 +28,54 @@ const Login = () => {
 
     setIsLoading(true);
     
-    // Simulate login - in production, this would be an actual API call
-    setTimeout(() => {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("username", username);
-      toast({
-        title: "Welcome back!",
-        description: "Login successful. Redirecting...",
+    const endpoint = isRegistering 
+      ? "http://localhost/php_backend/register.php" 
+      : "http://localhost/php_backend/login.php";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
+
+      const data = await response.json();
+
+      if (data.success) {
+        if (isRegistering) {
+          toast({
+            title: "Registration Successful",
+            description: "You can now log in.",
+          });
+          setIsRegistering(false);
+        } else {
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("username", data.user.username);
+          localStorage.setItem("userId", data.user.id); // Save User ID for PHP DB
+          
+          toast({
+            title: "Welcome back!",
+            description: "Login successful. Redirecting...",
+          });
+          navigate("/location");
+        }
+      } else {
+        toast({
+          title: "Error",
+          description: data.message || "Authentication failed",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Auth error:", error);
+      toast({
+        title: "Connection Error",
+        description: "Could not connect to the server. Ensure PHP backend is running.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-      navigate("/location");
-    }, 1000);
+    }
   };
 
   return (
@@ -60,13 +98,15 @@ const Login = () => {
 
         <Card className="shadow-card border-0 gradient-card">
           <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl font-semibold text-center">Sign In</CardTitle>
+            <CardTitle className="text-2xl font-semibold text-center">
+              {isRegistering ? "Create Account" : "Sign In"}
+            </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to continue
+              {isRegistering ? "Join our community of farmers" : "Enter your credentials to continue"}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleAuth} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-sm font-medium">
                   Username
@@ -111,13 +151,25 @@ const Login = () => {
                 {isLoading ? (
                   <span className="flex items-center gap-2">
                     <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Signing in...
+                    {isRegistering ? "Registering..." : "Signing in..."}
                   </span>
                 ) : (
-                  "Sign In"
+                  isRegistering ? "Sign Up" : "Sign In"
                 )}
               </Button>
             </form>
+
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={() => setIsRegistering(!isRegistering)}
+                className="text-sm text-primary hover:underline"
+              >
+                {isRegistering
+                  ? "Already have an account? Sign In"
+                  : "Don't have an account? Sign Up"}
+              </button>
+            </div>
 
             <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Shield className="w-4 h-4" />

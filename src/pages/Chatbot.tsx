@@ -81,6 +81,17 @@ const Chatbot = () => {
   // 🔹 SEND DATA TO BACKEND
   const sendToBackend = async (finalAnswers: string[]) => {
     try {
+      // Get location from localStorage if available
+      const savedLocation = localStorage.getItem("userLocation");
+      let lat = 19.07;
+      let lon = 72.87;
+      
+      if (savedLocation) {
+        const loc = JSON.parse(savedLocation);
+        lat = loc.latitude;
+        lon = loc.longitude;
+      }
+
       const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: {
@@ -89,13 +100,31 @@ const Chatbot = () => {
         body: JSON.stringify({
           crop: finalAnswers[0],
           symptoms: finalAnswers.slice(1).join(", "),
-          latitude: 19.07,    // TEMP (can be dynamic later)
-          longitude: 72.87,   // TEMP
+          latitude: lat,
+          longitude: lon,
         }),
       });
 
       const data = await response.json();
       localStorage.setItem("predictionResult", JSON.stringify(data));
+
+      // 🔹 SAVE TO PHP DATABASE
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        await fetch("http://localhost/php_backend/save_diagnosis.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: userId,
+            crop: data.crop,
+            symptoms: data.symptoms,
+            prediction: data.prediction,
+            risk: data.risk,
+            confidence: data.confidence
+          }),
+        });
+      }
+
     } catch (error) {
       console.error("Error sending data to backend:", error);
     }
