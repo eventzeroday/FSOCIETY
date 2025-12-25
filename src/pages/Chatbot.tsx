@@ -66,9 +66,7 @@ const Chatbot = () => {
   }, [navigate, messages.length]);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const addBotMessage = (content: string, options?: string[]) => {
@@ -81,11 +79,10 @@ const Chatbot = () => {
   // 🔹 SEND DATA TO BACKEND
   const sendToBackend = async (finalAnswers: string[]) => {
     try {
-      // Get location from localStorage if available
       const savedLocation = localStorage.getItem("userLocation");
       let lat = 19.07;
       let lon = 72.87;
-      
+
       if (savedLocation) {
         const loc = JSON.parse(savedLocation);
         lat = loc.latitude;
@@ -107,24 +104,6 @@ const Chatbot = () => {
 
       const data = await response.json();
       localStorage.setItem("predictionResult", JSON.stringify(data));
-
-      // 🔹 SAVE TO PHP DATABASE
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        await fetch("http://localhost/php_backend/save_diagnosis.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: userId,
-            crop: data.crop,
-            symptoms: data.symptoms,
-            prediction: data.prediction,
-            risk: data.risk,
-            confidence: data.confidence
-          }),
-        });
-      }
-
     } catch (error) {
       console.error("Error sending data to backend:", error);
     }
@@ -148,7 +127,6 @@ const Chatbot = () => {
         localStorage.setItem("chatbotAnswers", JSON.stringify(newAnswers));
         addBotMessage("Thank you! Analyzing your responses...");
 
-        // 🔥 BACKEND CALL
         sendToBackend(newAnswers);
 
         setTimeout(() => {
@@ -171,22 +149,20 @@ const Chatbot = () => {
 
   return (
     <div className="min-h-screen gradient-hero flex flex-col">
-      <header className="bg-card/80 backdrop-blur-sm border-b border-border/50 sticky top-0 z-20">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+      <header className="bg-card/80 backdrop-blur-sm border-b sticky top-0 z-20">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Leaf className="w-5 h-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="font-semibold text-foreground">WeFarm</h1>
+              <h1 className="font-semibold">WeFarm</h1>
               <p className="text-xs text-muted-foreground">Disease Detection</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground hidden sm:block">
-              Welcome, {username}
-            </span>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <span className="text-sm hidden sm:block">Welcome, {username}</span>
+            <Button type="button" variant="ghost" size="sm" onClick={handleLogout}>
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
@@ -194,9 +170,9 @@ const Chatbot = () => {
       </header>
 
       <div className="flex-1 container mx-auto px-4 py-6 max-w-2xl">
-        <Card className="h-[calc(100vh-200px)] flex flex-col shadow-card border-0 gradient-card">
-          <CardHeader className="border-b border-border/50 pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
+        <Card className="h-[calc(100vh-200px)] flex flex-col">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <Bot className="w-5 h-5 text-primary" />
               Crop Disease Assessment
             </CardTitle>
@@ -220,12 +196,14 @@ const Chatbot = () => {
                         <Bot className="w-4 h-4 text-primary" />
                       </div>
                     )}
+
                     <div className="max-w-[80%]">
                       {message.type === "bot" ? (
                         <div className="space-y-3">
                           <div className="bg-secondary/50 rounded-2xl px-4 py-3">
-                            <p>{message.content}</p>
+                            {message.content}
                           </div>
+
                           {message.options &&
                             !isComplete &&
                             index === messages.length - 1 && (
@@ -233,6 +211,7 @@ const Chatbot = () => {
                                 {message.options.map((option) => (
                                   <Button
                                     key={option}
+                                    type="button"   // 🔥 FIX IS HERE
                                     variant="outline"
                                     size="sm"
                                     onClick={() => handleOptionSelect(option)}
@@ -250,6 +229,7 @@ const Chatbot = () => {
                         </div>
                       )}
                     </div>
+
                     {message.type === "user" && (
                       <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
                         <User className="w-4 h-4 text-accent" />
