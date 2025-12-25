@@ -1,0 +1,128 @@
+/* Page */
+.heatmap-page {
+  padding: 36px;
+  background: linear-gradient(#f8fafc, #eef2f7);
+  min-height: 100vh;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Header */
+.heatmap-header h1 {
+  font-size: 38px;
+  font-weight: 800;
+  color: #14532d;
+}
+
+.heatmap-header p {
+  margin-top: 8px;
+  color: #475569;
+  max-width: 760px;
+}
+
+/* Search Panel */
+.search-panel {
+  margin-top: 26px;
+  display: flex;
+  gap: 14px;
+  max-width: 780px;
+  background: white;
+  padding: 18px;
+  border-radius: 20px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+}
+
+.search-panel input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.search-panel input:focus {
+  outline: none;
+  border-color: #22c55e;
+}
+
+.search-panel button {
+  padding: 14px 22px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Status Bar */
+.status-bar {
+  margin-top: 16px;
+  color: #065f46;
+  font-size: 14px;
+}
+
+/* Map */
+.map-wrapper {
+  position: relative;
+  margin-top: 24px;
+  height: 74vh;
+  border-radius: 26px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Legend */
+.legend-card {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 260px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  padding: 18px;
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.2);
+}
+
+.legend-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #14532d;
+}
+
+.legend-item {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.legend-item span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+
+.legend-item p {
+  font-size: 12px;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.legend-card .low {
+  background: #22c55e;
+}
+
+.legend-card .medium {
+  background: #facc15;
+}                               
+
+.legend-card .high {
+  background: #ef4444;
+}

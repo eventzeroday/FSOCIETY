@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 80 20% 97%;
+    --foreground: 90 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 90 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 90 30% 10%;
+
+    --primary: 142 55% 35%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 80 20% 92%;
+    --secondary-foreground: 90 30% 15%;
+
+    --muted: 80 15% 94%;
+    --muted-foreground: 90 10% 45%;
+
+    --accent: 35 80% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 80 15% 88%;
+    --input: 80 15% 88%;
+    --ring: 142 55% 35%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(142, 55%, 35%), hsl(142, 45%, 45%));
+    --gradient-hero: linear-gradient(180deg, hsl(80, 20%, 97%) 0%, hsl(90, 25%, 93%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 100%) 0%, hsl(80, 20%, 97%) 100%);
+    --gradient-earth: linear-gradient(135deg, hsl(35, 60%, 45%), hsl(25, 50%, 40%));
+
+    --shadow-soft: 0 4px 20px -4px hsl(142 55% 35% / 0.15);
+    --shadow-card: 0 8px 30px -12px hsl(90 30% 10% / 0.12);
+    --shadow-glow: 0 0 40px hsl(142 55% 35% / 0.2);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 90 20% 8%;
+    --foreground: 80 15% 95%;
+
+    --card: 90 20% 12%;
+    --card-foreground: 80 15% 95%;
+
+    --popover: 90 20% 12%;
+    --popover-foreground: 80 15% 95%;
+
+    --primary: 142 50% 45%;
+    --primary-foreground: 90 20% 8%;
+
+    --secondary: 90 15% 18%;
+    --secondary-foreground: 80 15% 90%;
+
+    --muted: 90 15% 15%;
+    --muted-foreground: 80 10% 60%;
+
+    --accent: 35 70% 55%;
+    --accent-foreground: 90 20% 8%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 90 15% 20%;
+    --input: 90 15% 20%;
+    --ring: 142 50% 45%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .gradient-earth {
+    background: var(--gradient-earth);
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+
+  .animate-grow {
+    animation: grow 8s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes grow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
